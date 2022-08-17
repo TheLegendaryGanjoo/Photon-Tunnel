@@ -12,6 +12,7 @@ public class Main : MonoBehaviour
     float frequency = Mathf.Pow(10, 14) * 4.997F;//600 nanometers
     float num = Mathf.Pow(10, 21) * 4.2F * 32;
     public GameObject sail;
+    public float res;
     public Rigidbody rb;
     public int mult;
     public float q;
@@ -28,9 +29,24 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
         //GameObject temp = new GameObject();
         float accel = mult*((2f * (1400 * sail.transform.localScale.x * sail.transform.localScale.y)) / c) / 5;
-
+        for(float x=-sail.transform.localScale.x/2/res;x<= sail.transform.localScale.x / 2 * res; x++)
+        {
+            for(float y = -sail.transform.localScale.y / 2 / res; y <= sail.transform.localScale.y / 2 * res; y++)
+            {
+                Debug.Log(y);
+                RaycastHit hitFo;
+                Debug.DrawRay(new Vector3(0, y * res, x * res), Vector3.right);
+                if (Physics.Raycast(new Vector3(0,y*res,x*res), Vector3.right, out hitFo))
+                {
+                    Vector3 cachedNormal = hitFo.normal; // Normal of the surface the ray hit
+                    rb.AddForceAtPosition(cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x) * (sail.transform.localScale.y)) / res)), hitFo.point);
+                }
+            }
+        }
+        /*
         for (float x = -8f; x < sail.transform.localScale.x / 2f; x++)
         {
             for (float y = -1f; y < sail.transform.localScale.y / 2f; y++)
@@ -66,7 +82,7 @@ public class Main : MonoBehaviour
 
                 }
             }
-        }
+        }*/
 
 
         //sail.transform.position=new Vector3(.5f*accel*Mathf.Pow(Time.unscaledTime,2),0,0);
