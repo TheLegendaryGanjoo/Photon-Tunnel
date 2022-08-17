@@ -31,15 +31,15 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        /*
         if (Mathf.Round(Time.fixedUnscaledTime) % 30 == 1)
         {
             Debug.Log(Time.fixedUnscaledTime);
             Debug.Log(sail.transform.position.x);
-        }
+        }*/
         Vector3 vector = new Vector3();
         //GameObject temp = new GameObject();
         int hits = 0;
-        float accel = mult*((2f * (1368 * sail.transform.localScale.x * sail.transform.localScale.y)) / c) / 5;
         for (float x = tubesize * -sail.transform.localScale.x / 2 / hres; x < tubesize * sail.transform.localScale.x / 2 / hres; x++)
         {
             for (float y = tubesize * -sail.transform.localScale.y / 2 / vres; y < tubesize * sail.transform.localScale.y / 2 / vres; y++)
@@ -52,8 +52,12 @@ public class Main : MonoBehaviour
                 }
             }
         }
-        Debug.Log(hits);
+        
+        float area = hits * hres*hres;
+        float accel = mult * ((2f * (1368 * area)) / c) / 5;
+        Debug.Log(area);
 
+        //Debug.Log(sail.transform.localScale.x * sail.transform.localScale.y);
         for (float x=tubesize*-sail.transform.localScale.x/2/hres;x< tubesize*sail.transform.localScale.x / 2 / hres; x++)
         {
             for(float y = tubesize*-sail.transform.localScale.y / 2 / vres; y < tubesize*sail.transform.localScale.y / 2 / vres; y++)
@@ -61,7 +65,7 @@ public class Main : MonoBehaviour
 
                 //Debug.Log(y);
                 RaycastHit hitFo;
-                Debug.DrawRay(new Vector3(-1, (y + .5f) * vres + sail.transform.position.y, (x + .5f) * hres + sail.transform.position.z), Vector3.right*100,color:Color.red);
+                //Debug.DrawRay(new Vector3(-1, (y + .5f) * vres + sail.transform.position.y, (x + .5f) * hres + sail.transform.position.z), Vector3.right*100,color:Color.red);
                 if (Physics.Raycast(new Vector3(-1,(y+.5f)*vres+sail.transform.position.y,(x+.5f)*hres + sail.transform.position.z), Vector3.right, out hitFo))
 
                 {
