@@ -13,16 +13,17 @@ public class Main : MonoBehaviour
     float num = Mathf.Pow(10, 21) * 4.2F * 32;
     public GameObject sail;
     public float tubesize;
-    public float res;
+    public float hres;
     public Rigidbody rb;
     public int mult;
     public float q;
+    public float vres;
     public GameObject point;
     // Start is called before the first frame update
     void Start()
     {
         point.transform.position = Vector3.zero;
-        sail.transform.position = new Vector3(0, 0, 0);
+        //sail.transform.position = new Vector3(0, 0, 0);
         //rb.AddForce(new Vector3 (0, 0, 0));
         //rb.AddForce(new Vector3(((2f * (1400 * sail.transform.localScale.x * sail.transform.localScale.y)) / c), 0, 0),ForceMode.Impulse);
     }
@@ -37,24 +38,37 @@ public class Main : MonoBehaviour
         }
         Vector3 vector = new Vector3();
         //GameObject temp = new GameObject();
-        float accel = mult*((2f * (1400 * sail.transform.localScale.x * sail.transform.localScale.y)) / c) / 5;
-        for(float x=tubesize*-sail.transform.localScale.x/2/res;x< tubesize*sail.transform.localScale.x / 2 / res; x++)
+        int hits = 0;
+        float accel = mult*((2f * (1368 * sail.transform.localScale.x * sail.transform.localScale.y)) / c) / 5;
+        for (float x = tubesize * -sail.transform.localScale.x / 2 / hres; x < tubesize * sail.transform.localScale.x / 2 / hres; x++)
         {
-            for(float y = tubesize*-sail.transform.localScale.y / 2 / res; y < tubesize*sail.transform.localScale.y / 2 / res; y++)
+            for (float y = tubesize * -sail.transform.localScale.y / 2 / vres; y < tubesize * sail.transform.localScale.y / 2 / vres; y++)
+            {
+                RaycastHit hit;
+                if (Physics.Raycast(new Vector3(-1, (y + .5f) * vres + sail.transform.position.y, (x + .5f) * hres + sail.transform.position.z), Vector3.right, out hit))
+
+                {
+                    hits += 1;
+                }
+            }
+        }
+        for (float x=tubesize*-sail.transform.localScale.x/2/hres;x< tubesize*sail.transform.localScale.x / 2 / hres; x++)
+        {
+            for(float y = tubesize*-sail.transform.localScale.y / 2 / vres; y < tubesize*sail.transform.localScale.y / 2 / vres; y++)
             {
 
                 //Debug.Log(y);
                 RaycastHit hitFo;
-                //Debug.DrawRay(new Vector3(-1, (y + .5f) * res + sail.transform.position.y, (x + .5f) * res + sail.transform.position.z), Vector3.right*100);
-                if (Physics.Raycast(new Vector3(-1,(y+.5f)*res+sail.transform.position.y,(x+.5f)*res + sail.transform.position.z), Vector3.right, out hitFo))
+                //Debug.DrawRay(new Vector3(-1, (y + .5f) * vres + sail.transform.position.y, (x + .5f) * hres + sail.transform.position.z), Vector3.right*100,color:Color.red);
+                if (Physics.Raycast(new Vector3(-1,(y+.5f)*vres+sail.transform.position.y,(x+.5f)*hres + sail.transform.position.z), Vector3.right, out hitFo))
 
                 {
-                    
+                    //Debug.DrawRay(new Vector3(-1, (y + .5f) * vres + sail.transform.position.y, (x + .5f) * hres + sail.transform.position.z), Vector3.right * 100, color: Color.white);
                     //Debug.Log("hit");
                     Vector3 cachedNormal = hitFo.normal; // Normal of the surface the ray hit
                     //Debug.Log(cachedNormal);
-                    vector += -1 * cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x / res) * (sail.transform.localScale.y / res))));
-                    rb.AddForceAtPosition(-1*cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x/res) * (sail.transform.localScale.y/res)))), hitFo.point);
+                    vector += -1 * cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x / hres) * (sail.transform.localScale.y / vres))));
+                    rb.AddForceAtPosition(-1*cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x/hres) * (sail.transform.localScale.y/vres)))), hitFo.point);
                     
                 }
             }
