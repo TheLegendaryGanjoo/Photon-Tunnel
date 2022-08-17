@@ -52,6 +52,8 @@ public class Main : MonoBehaviour
                 }
             }
         }
+        Debug.Log(hits);
+
         for (float x=tubesize*-sail.transform.localScale.x/2/hres;x< tubesize*sail.transform.localScale.x / 2 / hres; x++)
         {
             for(float y = tubesize*-sail.transform.localScale.y / 2 / vres; y < tubesize*sail.transform.localScale.y / 2 / vres; y++)
@@ -59,7 +61,7 @@ public class Main : MonoBehaviour
 
                 //Debug.Log(y);
                 RaycastHit hitFo;
-                //Debug.DrawRay(new Vector3(-1, (y + .5f) * vres + sail.transform.position.y, (x + .5f) * hres + sail.transform.position.z), Vector3.right*100,color:Color.red);
+                Debug.DrawRay(new Vector3(-1, (y + .5f) * vres + sail.transform.position.y, (x + .5f) * hres + sail.transform.position.z), Vector3.right*100,color:Color.red);
                 if (Physics.Raycast(new Vector3(-1,(y+.5f)*vres+sail.transform.position.y,(x+.5f)*hres + sail.transform.position.z), Vector3.right, out hitFo))
 
                 {
@@ -68,7 +70,7 @@ public class Main : MonoBehaviour
                     Vector3 cachedNormal = hitFo.normal; // Normal of the surface the ray hit
                     //Debug.Log(cachedNormal);
                     vector += -1 * cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x / hres) * (sail.transform.localScale.y / vres))));
-                    rb.AddForceAtPosition(-1*cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x/hres) * (sail.transform.localScale.y/vres)))), hitFo.point);
+                    rb.AddForceAtPosition(-1*cachedNormal.normalized * (rb.mass * accel /hits), hitFo.point);
                     
                 }
             }
