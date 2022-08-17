@@ -12,6 +12,7 @@ public class Main : MonoBehaviour
     float frequency = Mathf.Pow(10, 14) * 4.997F;//600 nanometers
     float num = Mathf.Pow(10, 21) * 4.2F * 32;
     public GameObject sail;
+    public float tubesize;
     public float res;
     public Rigidbody rb;
     public int mult;
@@ -29,23 +30,37 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
+        if (Mathf.Round(Time.fixedUnscaledTime) % 30 == 1)
+        {
+            Debug.Log(Time.fixedUnscaledTime);
+            Debug.Log(sail.transform.position.x);
+        }
+        Vector3 vector = new Vector3();
         //GameObject temp = new GameObject();
         float accel = mult*((2f * (1400 * sail.transform.localScale.x * sail.transform.localScale.y)) / c) / 5;
-        for(float x=-sail.transform.localScale.x/2/res;x<= sail.transform.localScale.x / 2 * res; x++)
+        for(float x=tubesize*-sail.transform.localScale.x/2/res;x< tubesize*sail.transform.localScale.x / 2 / res; x++)
         {
-            for(float y = -sail.transform.localScale.y / 2 / res; y <= sail.transform.localScale.y / 2 * res; y++)
+            for(float y = tubesize*-sail.transform.localScale.y / 2 / res; y < tubesize*sail.transform.localScale.y / 2 / res; y++)
             {
-                Debug.Log(y);
+
+                //Debug.Log(y);
                 RaycastHit hitFo;
-                Debug.DrawRay(new Vector3(0, y * res, x * res), Vector3.right);
-                if (Physics.Raycast(new Vector3(0,y*res,x*res), Vector3.right, out hitFo))
+                //Debug.DrawRay(new Vector3(-1, (y + .5f) * res + sail.transform.position.y, (x + .5f) * res + sail.transform.position.z), Vector3.right*100);
+                if (Physics.Raycast(new Vector3(-1,(y+.5f)*res+sail.transform.position.y,(x+.5f)*res + sail.transform.position.z), Vector3.right, out hitFo))
+
                 {
+                    
+                    //Debug.Log("hit");
                     Vector3 cachedNormal = hitFo.normal; // Normal of the surface the ray hit
-                    rb.AddForceAtPosition(cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x) * (sail.transform.localScale.y)) / res)), hitFo.point);
+                    //Debug.Log(cachedNormal);
+                    vector += -1 * cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x / res) * (sail.transform.localScale.y / res))));
+                    rb.AddForceAtPosition(-1*cachedNormal.normalized * (rb.mass * accel / (((sail.transform.localScale.x/res) * (sail.transform.localScale.y/res)))), hitFo.point);
+                    
                 }
             }
         }
+        //Debug.DrawRay(sail.transform.position, vector);
+        //Debug.Log(vector);
         /*
         for (float x = -8f; x < sail.transform.localScale.x / 2f; x++)
         {
